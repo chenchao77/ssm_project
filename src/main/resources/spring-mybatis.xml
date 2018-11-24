@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans      http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+        http://www.springframework.org/schema/aop        http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+	http://www.springframework.org/schema/context    http://www.springframework.org/schema/context/spring-context-4.3.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--配置注解扫描-->
+    <context:component-scan base-package="com.zking.ssm_project"/>
+
+    <!--配置dbcp的数据库连接池-->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <!--连接对象-->
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <!--连接地址-->
+        <property name="url" value="jdbc:mysql://localhost:3306/test?characterEncoding=utf-8"/>
+        <!--用户名-->
+        <property name="username" value="root"/>
+        <property name="password" value="sasa"/>
+        <!-- 初始化连接大小 -->
+        <property name="initialSize" value="20"></property>
+        <!-- 连接池最大数量 -->
+        <property name="maxActive" value="100"></property>
+        <!-- 连接池最大空闲 -->
+        <property name="maxIdle" value="20"></property>
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="1"></property>
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="6000"></property>
+    </bean>
+
+    <!--创建sessionFactory工厂-->
+    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="typeAliasesPackage" value="com.zking.ssm_project.*.pojo"></property>
+        <property name="mapperLocations" value="classpath*:com/zking/ssm_project/*/mapper/*.xml"></property>
+    </bean>
+
+    <!--自动扫描 将Mapper接口生成代理注入到Spring-->
+    <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.zking.ssm_project.*.mapper"></property>
+        <property name="sqlSessionFactoryBeanName" value="sessionFactory"></property>
+    </bean>
+
+    <!--创建驱动-->
+    <bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <!--驱动管理-->
+    <tx:annotation-driven transaction-manager="dataSourceTransactionManager"/>
+
+
+    <!--配置redis的缓冲池-->
+    <!--<bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+        &lt;!&ndash;ip连接地址&ndash;&gt;
+        <constructor-arg name="host" value="192.168.42.150"></constructor-arg>
+        &lt;!&ndash;端口号&ndash;&gt;
+        <constructor-arg name="port" value="6379"></constructor-arg>
+    </bean>-->
+
+
+    <!--创建redis缓存类对象-->
+    <!--<bean id="redisCache" class="com.zking.ssm_project.*.redis.RedisCache">
+        <property name="jedisPool" ref="jedisPool"></property>
+    </bean>-->
+</beans>

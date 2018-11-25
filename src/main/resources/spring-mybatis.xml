@@ -7,50 +7,48 @@
         http://www.springframework.org/schema/aop        http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 	http://www.springframework.org/schema/context    http://www.springframework.org/schema/context/spring-context-4.3.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <!--配置注解扫描-->
-    <context:component-scan base-package="com.zking.ssm_project"/>
+    <!--配置注解式驱动-->
+    <context:annotation-config></context:annotation-config>
 
-    <!--配置dbcp的数据库连接池-->
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-        <!--连接对象-->
-        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    <!--配置注解式扫描-->
+    <context:component-scan base-package="com.zking.ssm_project"></context:component-scan>
+
+    <!--配置spring-jdbc-->
+    <bean id="driverManagerDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <!--加载驱动-->
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
         <!--连接地址-->
-        <property name="url" value="jdbc:mysql://localhost:3306/test?characterEncoding=utf-8"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/test?characterEncoding=utf-8"></property>
         <!--用户名-->
-        <property name="username" value="root"/>
-        <property name="password" value="sasa"/>
-        <!-- 初始化连接大小 -->
-        <property name="initialSize" value="20"></property>
-        <!-- 连接池最大数量 -->
-        <property name="maxActive" value="100"></property>
-        <!-- 连接池最大空闲 -->
-        <property name="maxIdle" value="20"></property>
-        <!-- 连接池最小空闲 -->
-        <property name="minIdle" value="1"></property>
-        <!-- 获取连接最大等待时间 -->
-        <property name="maxWait" value="6000"></property>
+        <property name="username" value="root"></property>
+        <!--密码-->
+        <property name="password" value="sasa"></property>
     </bean>
 
-    <!--创建sessionFactory工厂-->
-    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource"></property>
-        <property name="typeAliasesPackage" value="com.zking.ssm_project.*.pojo"></property>
+    <!--创建sqlsessionfactory的对象-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--指定数据源-->
+        <property name="dataSource" ref="driverManagerDataSource"></property>
+        <!--配置mybatis核心配置文件-->
+        <property name="configLocation" value="classpath:configuration.xml"></property>
+        <!--自动加载mapper文件-->
         <property name="mapperLocations" value="classpath*:com/zking/ssm_project/*/mapper/*.xml"></property>
+        <!--加载实体类-->
+        <property name="typeAliasesPackage" value="com.zking.ssm_project.*.pojo"></property>
     </bean>
 
-    <!--自动扫描 将Mapper接口生成代理注入到Spring-->
     <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.zking.ssm_project.*.mapper"></property>
-        <property name="sqlSessionFactoryBeanName" value="sessionFactory"></property>
+        <property name="basePackage" value="com/zking/ssm_project/*/mapper"></property>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
     </bean>
 
-    <!--创建驱动-->
-    <bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"></property>
+    <!--事务管理-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="driverManagerDataSource"></property>
     </bean>
 
-    <!--驱动管理-->
-    <tx:annotation-driven transaction-manager="dataSourceTransactionManager"/>
+    <!--开启事务注释-->
+    <tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>
 
 
     <!--配置redis的缓冲池-->

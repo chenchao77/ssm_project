@@ -22,11 +22,10 @@ public class T_userController {
      *
      * @return
      */
-    @RequestMapping("T_userLogin")
-    public String T_userLogin(T_user t_user) {
+    @RequestMapping("t_userLogin")
+    public String t_userLogin(T_user t_user) {
         System.out.println("进来了：" + t_user);
         if (it_userService.t_userLogin(t_user) != null) {
-            System.out.println("跳转了");
             return "index";
         }
         return "404";

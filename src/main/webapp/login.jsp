@@ -16,12 +16,12 @@
 </head>
 <body>
 <h2 align="center">用户登录</h2><br/><br/>
-<form class="layui-form" action="/ly/t_userLogin.action" method="post">
+<form class="layui-form" action="/ly/ly_UsersLogin.action" method="post">
     <div class="layui-form-item" align="center">
         <div class="layui-inline">
             <label class="layui-form-label">用户名称</label>
             <div class="layui-input-inline">
-                <input type="text" name="uname" lay-verify="required" placeholder="请输入用户名称"
+                <input type="text" name="uName" lay-verify="required" placeholder="请输入用户名称"
                        autocomplete="off" class="layui-input" style="width: 300px">
             </div>
         </div>
@@ -29,7 +29,7 @@
         <div class="layui-inline">
             <label class="layui-form-label">用户密码</label>
             <div class="layui-input-inline">
-                <input type="password" name="upassword" lay-verify="required" placeholder="请输入用户密码"
+                <input type="password" name="uPassword" lay-verify="required" placeholder="请输入用户密码"
                        autocomplete="off" class="layui-input" style="width: 300px">
             </div>
         </div>
